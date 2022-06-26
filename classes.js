@@ -10,13 +10,7 @@ class Sprite {
     scale = 1
   }) {
     this.position = position
-    this.image = new Image()
     this.frames = { ...frames, val: 0, elapsed: 0 }
-    this.image.onload = () => {
-      this.width = (this.image.width / this.frames.max) * scale
-      this.height = this.image.height * scale
-    }
-    this.image.src = image.src
 
     this.animate = animate
     this.sprites = sprites
@@ -24,6 +18,16 @@ class Sprite {
 
     this.rotation = rotation
     this.scale = scale
+
+    this.image = image
+    const onLoad = () => {
+      this.width = (this.image.width / this.frames.max) * this.scale
+      this.height = this.image.height * this.scale
+    };
+    this.image.addEventListener('load', onLoad)
+    if (this.image.src.length && this.image.complete) {
+      onLoad()
+    }
   }
 
   draw() {
@@ -140,14 +144,12 @@ class Monster extends Sprite {
     switch (attack.name) {
       case 'Fireball':
         audio.initFireball.play()
-        const fireballImage = new Image()
-        fireballImage.src = './img/fireball.png'
         const fireball = new Sprite({
           position: {
             x: this.position.x,
             y: this.position.y
           },
-          image: fireballImage,
+          image: images.fireball,
           frames: {
             max: 4,
             hold: 10

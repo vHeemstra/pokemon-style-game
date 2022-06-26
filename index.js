@@ -18,7 +18,7 @@ const charactersMap = []
 for (let i = 0; i < charactersMapData.length; i += 70) {
   charactersMap.push(charactersMapData.slice(i, 70 + i))
 }
-console.log(charactersMap)
+// console.log(charactersMap)
 
 const boundaries = []
 const offset = {
@@ -57,11 +57,6 @@ battleZonesMap.forEach((row, i) => {
 })
 
 const characters = []
-const villagerImg = new Image()
-villagerImg.src = './img/villager/Idle.png'
-
-const oldManImg = new Image()
-oldManImg.src = './img/oldMan/Idle.png'
 
 charactersMap.forEach((row, i) => {
   row.forEach((symbol, j) => {
@@ -73,7 +68,7 @@ charactersMap.forEach((row, i) => {
             x: j * Boundary.width + offset.x,
             y: i * Boundary.height + offset.y
           },
-          image: villagerImg,
+          image: images.villager,
           frames: {
             max: 4,
             hold: 60
@@ -91,7 +86,7 @@ charactersMap.forEach((row, i) => {
             x: j * Boundary.width + offset.x,
             y: i * Boundary.height + offset.y
           },
-          image: oldManImg,
+          image: images.oldMan,
           frames: {
             max: 4,
             hold: 60
@@ -114,39 +109,21 @@ charactersMap.forEach((row, i) => {
   })
 })
 
-const image = new Image()
-image.src = './img/Pellet Town.png'
-
-const foregroundImage = new Image()
-foregroundImage.src = './img/foregroundObjects.png'
-
-const playerDownImage = new Image()
-playerDownImage.src = './img/playerDown.png'
-
-const playerUpImage = new Image()
-playerUpImage.src = './img/playerUp.png'
-
-const playerLeftImage = new Image()
-playerLeftImage.src = './img/playerLeft.png'
-
-const playerRightImage = new Image()
-playerRightImage.src = './img/playerRight.png'
-
 const player = new Sprite({
   position: {
     x: canvas.width / 2 - 192 / 4 / 2,
     y: canvas.height / 2 - 68 / 2
   },
-  image: playerDownImage,
+  image: images.playerDown,
   frames: {
     max: 4,
     hold: 10
   },
   sprites: {
-    up: playerUpImage,
-    left: playerLeftImage,
-    right: playerRightImage,
-    down: playerDownImage
+    up: images.playerUp,
+    left: images.playerLeft,
+    right: images.playerRight,
+    down: images.playerDown
   }
 })
 
@@ -155,7 +132,7 @@ const background = new Sprite({
     x: offset.x,
     y: offset.y
   },
-  image: image
+  image: images.background
 })
 
 const foreground = new Sprite({
@@ -163,7 +140,7 @@ const foreground = new Sprite({
     x: offset.x,
     y: offset.y
   },
-  image: foregroundImage
+  image: images.foreground
 })
 
 const keys = {
@@ -188,6 +165,7 @@ const movables = [
   ...battleZones,
   ...characters
 ]
+
 const renderables = [
   background,
   ...boundaries,
@@ -403,53 +381,62 @@ function animate() {
       })
   }
 }
-// animate()
 
 let lastKey = ''
-window.addEventListener('keydown', (e) => {
-  switch (e.key) {
-    case 'w':
-      keys.w.pressed = true
-      lastKey = 'w'
-      break
-    case 'a':
-      keys.a.pressed = true
-      lastKey = 'a'
-      break
-
-    case 's':
-      keys.s.pressed = true
-      lastKey = 's'
-      break
-
-    case 'd':
-      keys.d.pressed = true
-      lastKey = 'd'
-      break
-  }
-})
-
-window.addEventListener('keyup', (e) => {
-  switch (e.key) {
-    case 'w':
-      keys.w.pressed = false
-      break
-    case 'a':
-      keys.a.pressed = false
-      break
-    case 's':
-      keys.s.pressed = false
-      break
-    case 'd':
-      keys.d.pressed = false
-      break
-  }
-})
-
 let clicked = false
-addEventListener('click', () => {
-  if (!clicked) {
-    audio.Map.play()
-    clicked = true
-  }
+
+function startGame() {
+  //TODO: e.key --> e.code
+  window.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'w':
+        keys.w.pressed = true
+        lastKey = 'w'
+        break
+      case 'a':
+        keys.a.pressed = true
+        lastKey = 'a'
+        break
+
+      case 's':
+        keys.s.pressed = true
+        lastKey = 's'
+        break
+
+      case 'd':
+        keys.d.pressed = true
+        lastKey = 'd'
+        break
+    }
+  })
+
+  window.addEventListener('keyup', (e) => {
+    switch (e.key) {
+      case 'w':
+        keys.w.pressed = false
+        break
+      case 'a':
+        keys.a.pressed = false
+        break
+      case 's':
+        keys.s.pressed = false
+        break
+      case 'd':
+        keys.d.pressed = false
+        break
+    }
+  })
+
+  window.addEventListener('click', () => {
+    if (!clicked) {
+      audio.Map.play()
+      clicked = true
+    }
+  })
+
+  animate()
+}
+
+loadImages(() => {
+  startGame()
 })

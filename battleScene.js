@@ -1,11 +1,9 @@
-const battleBackgroundImage = new Image()
-battleBackgroundImage.src = './img/battleBackground.png'
 const battleBackground = new Sprite({
   position: {
     x: 0,
     y: 0
   },
-  image: battleBackgroundImage
+  image: images.battleBackground
 })
 
 let draggle
@@ -116,16 +114,12 @@ function animateBattle() {
   battleAnimationId = window.requestAnimationFrame(animateBattle)
   battleBackground.draw()
 
-  console.log(battleAnimationId)
+  // console.log(battleAnimationId)
 
   renderedSprites.forEach((sprite) => {
     sprite.draw()
   })
 }
-
-animate()
-// initBattle()
-// animateBattle()
 
 document.querySelector('#dialogueBox').addEventListener('click', (e) => {
   if (queue.length > 0) {
