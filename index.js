@@ -5,110 +5,96 @@ canvas.height = 576
 const c = canvas.getContext('2d')
 c.imageSmoothingEnabled = false
 
-const collisionsMap = []
-for (let i = 0; i < collisions.length; i += 70) {
-  collisionsMap.push(collisions.slice(i, 70 + i))
-}
-
-const battleZonesMap = []
-for (let i = 0; i < battleZonesData.length; i += 70) {
-  battleZonesMap.push(battleZonesData.slice(i, 70 + i))
-}
-
-const charactersMap = []
-for (let i = 0; i < charactersMapData.length; i += 70) {
-  charactersMap.push(charactersMapData.slice(i, 70 + i))
-}
-// console.log(charactersMap)
-
-const boundaries = []
 const offset = {
   x: -735,
   y: -650
 }
 
-collisionsMap.forEach((row, i) => {
-  row.forEach((symbol, j) => {
-    if (symbol === 1025)
-      boundaries.push(
-        new Boundary({
-          position: {
-            x: j * Boundary.width + offset.x,
-            y: i * Boundary.height + offset.y
-          }
-        })
-      )
-  })
-})
+const boundaries = []
+for (let i = 0; i < collisions.length; i++ ) {
+  if (collisions[i] === 1025) {
+    const x = i % 70
+    const y = (i - x) / 70
+    boundaries.push(
+      new Boundary({
+        position: {
+          x: x * Boundary.width + offset.x,
+          y: y * Boundary.height + offset.y
+        }
+      })
+    )
+  }
+}
 
 const battleZones = []
-
-battleZonesMap.forEach((row, i) => {
-  row.forEach((symbol, j) => {
-    if (symbol === 1025)
-      battleZones.push(
-        new Boundary({
-          position: {
-            x: j * Boundary.width + offset.x,
-            y: i * Boundary.height + offset.y
-          }
-        })
-      )
-  })
-})
+for (let i = 0; i < battleZonesData.length; i++ ) {
+  if (battleZonesData[i] === 1025) {
+    const x = i % 70
+    const y = (i - x) / 70
+    battleZones.push(
+      new Boundary({
+        position: {
+          x: x * Boundary.width + offset.x,
+          y: y * Boundary.height + offset.y
+        }
+      })
+    )
+  }
+}
 
 const characters = []
+for (let i = 0; i < charactersMapData.length; i++ ) {
+  const x = i % 70
+  const y = (i - x) / 70
+  let symbol = charactersMapData[i]
 
-charactersMap.forEach((row, i) => {
-  row.forEach((symbol, j) => {
-    // 1026 === villager
-    if (symbol === 1026) {
-      characters.push(
-        new Sprite({
-          position: {
-            x: j * Boundary.width + offset.x,
-            y: i * Boundary.height + offset.y
-          },
-          image: images.villager,
-          frames: {
-            max: 4,
-            hold: 60
-          },
-          scale: 3,
-          animate: true
-        })
-      )
-    }
-    // 1031 === oldMan
-    else if (symbol === 1031) {
-      characters.push(
-        new Sprite({
-          position: {
-            x: j * Boundary.width + offset.x,
-            y: i * Boundary.height + offset.y
-          },
-          image: images.oldMan,
-          frames: {
-            max: 4,
-            hold: 60
-          },
-          scale: 3
-        })
-      )
-    }
+  // 1026 === villager
+  if (symbol === 1026) {
+    characters.push(
+      new Sprite({
+        position: {
+          x: x * Boundary.width + offset.x,
+          y: y * Boundary.height + offset.y
+        },
+        image: images.villager,
+        frames: {
+          max: 4,
+          hold: 60
+        },
+        scale: 3,
+        animate: true
+      })
+    )
+  }
+  // 1031 === oldMan
+  else if (symbol === 1031) {
+    characters.push(
+      new Sprite({
+        position: {
+          x: x * Boundary.width + offset.x,
+          y: y * Boundary.height + offset.y
+        },
+        image: images.oldMan,
+        frames: {
+          max: 4,
+          hold: 60
+        },
+        scale: 3
+      })
+    )
+  }
 
-    if (symbol !== 0) {
-      boundaries.push(
-        new Boundary({
-          position: {
-            x: j * Boundary.width + offset.x,
-            y: i * Boundary.height + offset.y
-          }
-        })
-      )
-    }
-  })
-})
+  if (symbol !== 0) {
+    boundaries.push(
+      new Boundary({
+        position: {
+          x: x * Boundary.width + offset.x,
+          y: y * Boundary.height + offset.y
+        }
+      })
+    )
+  }
+}
 
 const player = new Sprite({
   position: {
@@ -144,21 +130,6 @@ const foreground = new Sprite({
   image: images.foreground
 })
 
-const keys = {
-  w: {
-    pressed: false
-  },
-  a: {
-    pressed: false
-  },
-  s: {
-    pressed: false
-  },
-  d: {
-    pressed: false
-  }
-}
-
 const movables = [
   background,
   ...boundaries,
@@ -175,6 +146,21 @@ const renderables = [
   player,
   foreground
 ]
+
+const keys = {
+  w: {
+    pressed: false
+  },
+  a: {
+    pressed: false
+  },
+  s: {
+    pressed: false
+  },
+  d: {
+    pressed: false
+  }
+}
 
 const battle = {
   initiated: false
@@ -387,7 +373,6 @@ let lastKey = ''
 let clicked = false
 
 function startGame() {
-  //TODO: e.key --> e.code
   window.addEventListener('keydown', (e) => {
     switch (e.key) {
       case 'w':
