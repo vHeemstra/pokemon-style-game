@@ -8,7 +8,7 @@ const battleBackground = new Sprite({
 
 let draggle
 let emby
-let renderedSprites
+let battleRenderables
 let battleAnimationId
 let queue
 
@@ -21,7 +21,7 @@ function initBattle() {
 
   draggle = new Monster(monsters.Draggle)
   emby = new Monster(monsters.Emby)
-  renderedSprites = [draggle, emby]
+  battleRenderables = [draggle, emby]
   queue = []
 
   emby.attacks.forEach((attack) => {
@@ -37,7 +37,7 @@ function initBattle() {
       emby.attack({
         attack: selectedAttack,
         recipient: draggle,
-        renderedSprites
+        battleRenderables
       })
 
       if (draggle.health <= 0) {
@@ -72,7 +72,7 @@ function initBattle() {
         draggle.attack({
           attack: randomAttack,
           recipient: emby,
-          renderedSprites
+          battleRenderables
         })
 
         if (emby.health <= 0) {
@@ -116,7 +116,7 @@ function animateBattle() {
 
   // console.log(battleAnimationId)
 
-  renderedSprites.forEach((sprite) => {
+  battleRenderables.forEach((sprite) => {
     sprite.draw()
   })
 }

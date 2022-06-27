@@ -128,7 +128,7 @@ class Monster extends Sprite {
     audio.victory.play()
   }
 
-  attack({ attack, recipient, renderedSprites }) {
+  attack({ attack, recipient, battleRenderables }) {
     document.querySelector('#dialogueBox').style.display = 'block'
     document.querySelector('#dialogueBox').innerHTML =
       this.name + ' used ' + attack.name
@@ -157,7 +157,7 @@ class Monster extends Sprite {
           animate: true,
           rotation
         })
-        renderedSprites.splice(1, 0, fireball)
+        battleRenderables.splice(1, 0, fireball)
 
         gsap.to(fireball.position, {
           x: recipient.position.x,
@@ -182,7 +182,7 @@ class Monster extends Sprite {
               yoyo: true,
               duration: 0.08
             })
-            renderedSprites.splice(1, 1)
+            battleRenderables.splice(1, 1)
           }
         })
 
@@ -232,6 +232,7 @@ class Monster extends Sprite {
 class Boundary {
   static width = 48
   static height = 48
+
   constructor({ position }) {
     this.position = position
     this.width = 48

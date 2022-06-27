@@ -168,9 +168,6 @@ const battle = {
 
 function animate() {
   const animationId = window.requestAnimationFrame(animate)
-  renderables.forEach((renderable) => {
-    renderable.draw()
-  })
 
   let moving = true
   player.animate = false
@@ -181,24 +178,26 @@ function animate() {
   if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
     for (let i = 0; i < battleZones.length; i++) {
       const battleZone = battleZones[i]
-      const overlappingArea =
-        (Math.min(
-          player.position.x + player.width,
-          battleZone.position.x + battleZone.width
-        ) -
-          Math.max(player.position.x, battleZone.position.x)) *
-        (Math.min(
-          player.position.y + player.height,
-          battleZone.position.y + battleZone.height
-        ) -
-          Math.max(player.position.y, battleZone.position.y))
+      const overlappingArea = (
+          Math.min(
+            player.position.x + player.width,
+            battleZone.position.x + battleZone.width
+          ) -
+          Math.max(player.position.x, battleZone.position.x)
+        ) * (
+          Math.min(
+            player.position.y + player.height,
+            battleZone.position.y + battleZone.height
+          ) -
+          Math.max(player.position.y, battleZone.position.y)
+        )
       if (
         rectangularCollision({
           rectangle1: player,
           rectangle2: battleZone
-        }) &&
-        overlappingArea > (player.width * player.height) / 2 &&
-        Math.random() < 0.01
+        })
+        && overlappingArea > (player.width * player.height) / 2
+        && Math.random() < 0.01
       ) {
         // deactivate current animation loop
         window.cancelAnimationFrame(animationId)
@@ -210,22 +209,16 @@ function animate() {
         battle.initiated = true
         gsap.to('#overlappingDiv', {
           opacity: 1,
-          repeat: 3,
+          repeat: 4,
           yoyo: true,
           duration: 0.4,
           onComplete() {
+            // activate a new animation loop
+            initBattle()
+            animateBattle()
             gsap.to('#overlappingDiv', {
-              opacity: 1,
-              duration: 0.4,
-              onComplete() {
-                // activate a new animation loop
-                initBattle()
-                animateBattle()
-                gsap.to('#overlappingDiv', {
-                  opacity: 0,
-                  duration: 0.4
-                })
-              }
+              opacity: 0,
+              duration: 0.4
             })
           }
         })
@@ -366,6 +359,11 @@ function animate() {
       movables.forEach((movable) => {
         movable.position.x -= 3
       })
+  }
+
+  // draw current game state
+  for (let i = 0; i < renderables.length; i++ ) {
+    renderables[i].draw()
   }
 }
 
