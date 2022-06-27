@@ -148,19 +148,21 @@ const renderables = [
 ]
 
 const keys = {
-  w: {
+  up: {
     pressed: false
   },
-  a: {
+  left: {
     pressed: false
   },
-  s: {
+  down: {
     pressed: false
   },
-  d: {
+  right: {
     pressed: false
   }
 }
+let lastKey = ''
+let clicked = false
 
 const battle = {
   initiated: false
@@ -175,7 +177,7 @@ function animate() {
   if (battle.initiated) return
 
   // activate a battle
-  if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
+  if (keys.up.pressed || keys.left.pressed || keys.down.pressed || keys.right.pressed) {
     for (let i = 0; i < battleZones.length; i++) {
       const battleZone = battleZones[i]
       const overlappingArea = (
@@ -227,7 +229,7 @@ function animate() {
     }
   }
 
-  if (keys.w.pressed && lastKey === 'w') {
+  if (keys.up.pressed && lastKey === 'up') {
     player.animate = true
     player.image = player.sprites.up
 
@@ -260,7 +262,7 @@ function animate() {
       movables.forEach((movable) => {
         movable.position.y += 3
       })
-  } else if (keys.a.pressed && lastKey === 'a') {
+  } else if (keys.left.pressed && lastKey === 'left') {
     player.animate = true
     player.image = player.sprites.left
 
@@ -293,7 +295,7 @@ function animate() {
       movables.forEach((movable) => {
         movable.position.x += 3
       })
-  } else if (keys.s.pressed && lastKey === 's') {
+  } else if (keys.down.pressed && lastKey === 'down') {
     player.animate = true
     player.image = player.sprites.down
 
@@ -326,7 +328,7 @@ function animate() {
       movables.forEach((movable) => {
         movable.position.y -= 3
       })
-  } else if (keys.d.pressed && lastKey === 'd') {
+  } else if (keys.right.pressed && lastKey === 'right') {
     player.animate = true
     player.image = player.sprites.right
 
@@ -367,29 +369,31 @@ function animate() {
   }
 }
 
-let lastKey = ''
-let clicked = false
-
 function startGame() {
   window.addEventListener('keydown', (e) => {
     switch (e.key) {
       case 'w':
-        keys.w.pressed = true
-        lastKey = 'w'
+      case 'ArrowUp':
+        keys.up.pressed = true
+        lastKey = 'up'
         break
+
       case 'a':
-        keys.a.pressed = true
-        lastKey = 'a'
+      case 'ArrowLeft':
+        keys.left.pressed = true
+        lastKey = 'left'
         break
 
       case 's':
-        keys.s.pressed = true
-        lastKey = 's'
+      case 'ArrowDown':
+        keys.down.pressed = true
+        lastKey = 'down'
         break
 
       case 'd':
-        keys.d.pressed = true
-        lastKey = 'd'
+      case 'ArrowRight':
+        keys.right.pressed = true
+        lastKey = 'right'
         break
     }
   })
@@ -397,16 +401,23 @@ function startGame() {
   window.addEventListener('keyup', (e) => {
     switch (e.key) {
       case 'w':
-        keys.w.pressed = false
+      case 'ArrowUp':
+        keys.up.pressed = false
         break
+
       case 'a':
-        keys.a.pressed = false
+      case 'ArrowLeft':
+        keys.left.pressed = false
         break
+
       case 's':
-        keys.s.pressed = false
+      case 'ArrowDown':
+        keys.down.pressed = false
         break
+
       case 'd':
-        keys.d.pressed = false
+      case 'ArrowRight':
+        keys.right.pressed = false
         break
     }
   })
